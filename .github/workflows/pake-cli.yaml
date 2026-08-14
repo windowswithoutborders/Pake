@@ -53,20 +53,25 @@ on:
         required: false
         type: boolean
         default: false
-      new_window:
-        description: "Allow sites to open new windows"
+      multi_arch:
+        description: "Universal binary (macOS only)"
         required: false
         type: boolean
         default: false
-      multi_arch:
-        description: "Universal binary (macOS only)"
+      hide_window_decorations:
+        description: "Hide the native window decorations (Windows and Linux)"
+        required: false
+        type: boolean
+        default: false
+      dark_mode:
+        description: "Force packaging applications using dark mode (supports macOS, Windows, and Linux)"
         required: false
         type: boolean
         default: false
       targets:
         description: "Package formats (comma-separated: deb,appimage,rpm,zst)"
         required: false
-        default: "deb"
+        default: ""
 
 jobs:
   build:
@@ -147,10 +152,6 @@ jobs:
             ARGS+=("--hide-title-bar")
           fi
 
-          if [ "${{ inputs.new_window }}" == "true" ]; then
-            ARGS+=("--new-window")
-          fi
-
           if [ "${{ inputs.multi_arch }}" == "true" ]; then
             ARGS+=("--multi-arch")
           fi
@@ -201,8 +202,16 @@ jobs:
             $args += "--hide-title-bar"
           }
 
-          if ("${{ inputs.new_window }}" -eq "true") {
-            $args += "--new-window"
+          if ("${{ inputs.hide_window_decorations }}" -eq "true") {
+            $args += "--hide-window-decorations"
+          }
+
+          if ("${{ inputs.hide_window_decorations }}" -eq "true") {
+            $args += "--hide-on-close"
+          }
+
+          if ("${{ inputs.dark_mode }}" -eq "true") {
+            $args += "--dark-mode"
           }
 
           Write-Host "Running: node dist/cli.js $($args -join ' ')"
