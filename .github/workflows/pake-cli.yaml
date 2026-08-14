@@ -64,7 +64,7 @@ on:
         type: boolean
         default: false
       hide_on_close:
-        description: "Hide the native window decorations (Windows and Linux)"
+        description: "Hide window instead of closing the application when clicking close button. Default: true for macOS, false for Windows/Linux."
         required: false
         type: boolean
         default: false
